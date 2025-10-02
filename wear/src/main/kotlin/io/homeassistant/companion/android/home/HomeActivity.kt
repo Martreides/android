@@ -59,6 +59,7 @@ class HomeActivity :
             object ThermostatTile : LaunchMode
             object CameraTile : LaunchMode
             object ShortcutsTile : LaunchMode
+            object TemplateTile : LaunchMode
         }
 
         fun getLaunchAction(packageName: String, tileId: Int, launchMode: LaunchMode): ActionBuilders.LaunchAction {
@@ -74,6 +75,7 @@ class HomeActivity :
                             LaunchMode.ThermostatTile -> OpenTileSettingsActivity.CONFIG_THERMOSTAT_TILE
                             LaunchMode.CameraTile -> OpenTileSettingsActivity.CONFIG_CAMERA_TILE
                             LaunchMode.ShortcutsTile -> OpenTileSettingsActivity.CONFIG_SHORTCUT_TILE
+                            LaunchMode.TemplateTile -> OpenTileSettingsActivity.CONFIG_TEMPLATE_TILE
                         },
                     )
                         .build(),
@@ -127,7 +129,8 @@ class HomeActivity :
         val launchMode = intent.getStringExtra(LAUNCH_MODE)
         if (launchMode == OpenTileSettingsActivity.CONFIG_THERMOSTAT_TILE ||
             launchMode == OpenTileSettingsActivity.CONFIG_CAMERA_TILE ||
-            launchMode == OpenTileSettingsActivity.CONFIG_SHORTCUT_TILE
+            launchMode == OpenTileSettingsActivity.CONFIG_SHORTCUT_TILE ||
+            launchMode == OpenTileSettingsActivity.CONFIG_TEMPLATE_TILE
         ) {
             startActivity(
                 OpenTileSettingsActivity.newInstance(

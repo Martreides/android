@@ -939,6 +939,7 @@
     <string name="template_widget_default">Enter template here</string>
     <string name="template_widget_desc">Render any template with HTML formatting</string>
     <string name="template_widget">Template widget</string>
+    <string name="template_tile_no_template_yet">Open the tile settings to set the template</string>
     <string name="troubleshooting">Troubleshooting</string>
     <string name="troubleshooting_summary">Logs and other tools to diagnose issues</string>
     <string name="themes_option_label_dark">Dark</string>

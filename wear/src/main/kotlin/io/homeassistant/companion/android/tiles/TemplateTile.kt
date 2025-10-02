@@ -30,6 +30,7 @@ import io.homeassistant.companion.android.common.R as commonR
 import io.homeassistant.companion.android.common.data.prefs.WearPrefsRepository
 import io.homeassistant.companion.android.common.data.prefs.impl.entities.TemplateTileConfig
 import io.homeassistant.companion.android.common.data.servers.ServerManager
+import io.homeassistant.companion.android.home.HomeActivity
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -70,7 +71,7 @@ class TemplateTile : TileService() {
             .setFreshnessIntervalMillis(freshness.toLong() * 1_000)
             .setTileTimeline(
                 if (serverManager.isRegistered()) {
-                    timeline(templateTileConfig)
+                    timeline(templateTileConfig, requestParams)
                 } else {
                     loggedOutTimeline(
                         this@TemplateTile,
@@ -145,7 +146,7 @@ class TemplateTile : TileService() {
         serviceJob.cancel()
     }
 
-    private suspend fun timeline(templateTileConfig: TemplateTileConfig): Timeline {
+    private suspend fun timeline(templateTileConfig: TemplateTileConfig, requestParams: TileRequest): Timeline {
         val renderedText = try {
             if (serverManager.isRegistered()) {
                 serverManager.integrationRepository().renderTemplate(templateTileConfig.template, mapOf()).toString()
@@ -162,7 +163,16 @@ class TemplateTile : TileService() {
             }
         }
 
-        return Timeline.fromLayoutElement(layout(renderedText))
+        return if (renderedText.isEmpty()) {
+            getNotConfiguredTimeline(
+                this@TemplateTile,
+                requestParams,
+                commonR.string.template_tile_no_template_yet,
+                HomeActivity.Companion.LaunchMode.TemplateTile,
+            )
+        } else {
+            Timeline.fromLayoutElement(layout(renderedText))
+        }
     }
 
     private suspend fun getTemplateTileConfig(tileId: Int): TemplateTileConfig {
