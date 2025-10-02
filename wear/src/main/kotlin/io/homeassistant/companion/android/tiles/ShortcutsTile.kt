@@ -38,6 +38,7 @@ import io.homeassistant.companion.android.common.R as commonR
 import io.homeassistant.companion.android.common.data.prefs.WearPrefsRepository
 import io.homeassistant.companion.android.common.data.servers.ServerManager
 import io.homeassistant.companion.android.data.SimplifiedEntity
+import io.homeassistant.companion.android.home.HomeActivity
 import io.homeassistant.companion.android.util.getIcon
 import java.nio.ByteBuffer
 import javax.inject.Inject
@@ -87,7 +88,7 @@ class ShortcutsTile : TileService() {
             .setResourcesVersion(entities.toString())
             .setTileTimeline(
                 if (serverManager.isRegistered()) {
-                    timeline(tileId)
+                    timeline(tileId, requestParams)
                 } else {
                     loggedOutTimeline(
                         this@ShortcutsTile,
@@ -183,11 +184,20 @@ class ShortcutsTile : TileService() {
         return wearPrefsRepository.getTileShortcutsAndSaveTileId(tileId).map { SimplifiedEntity(it) }
     }
 
-    private suspend fun timeline(tileId: Int): Timeline {
+    private suspend fun timeline(tileId: Int, requestParams: TileRequest): Timeline {
         val entities = getEntities(tileId)
         val showLabels = wearPrefsRepository.getShowShortcutText()
 
-        return Timeline.fromLayoutElement(layout(entities, showLabels))
+        return if (entities.isEmpty()) {
+            getNotConfiguredTimeline(
+                this@ShortcutsTile,
+                requestParams,
+                commonR.string.shortcuts_tile_no_shortcuts_yet,
+                HomeActivity.Companion.LaunchMode.ShortcutsTile,
+            )
+        } else {
+            Timeline.fromLayoutElement(layout(entities, showLabels))
+        }
     }
 
     fun layout(entities: List<SimplifiedEntity>, showLabels: Boolean): LayoutElement = Column.Builder().apply {

@@ -862,6 +862,7 @@
     <string name="shortcuts_tile_text_setting">Show names on tile</string>
     <string name="shortcuts_tile_log_in">Log in to add your first shortcut</string>
     <string name="shortcuts_tile_no_tiles_yet">There are no shortcuts tiles added yet</string>
+    <string name="shortcuts_tile_no_shortcuts_yet">Open the tile settings to select shortcuts</string>
     <string name="shortcuts">Shortcuts</string>
     <string name="show">Show</string>
     <string name="show_on_map">Show on map</string>
